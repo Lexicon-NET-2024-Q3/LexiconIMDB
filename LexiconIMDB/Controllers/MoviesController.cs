@@ -8,16 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using LexiconIMDB.Data;
 using LexiconIMDB.Models.Entities;
 using LexiconIMDB.Models.ViewModels;
+using LexiconIMDB.Services;
 
 namespace LexiconIMDB.Controllers
 {
     public class MoviesController : Controller
     {
         private readonly LexiconIMDBContext _context;
+        private readonly IGenreSelectListService _selectListService;
 
-        public MoviesController(LexiconIMDBContext context)
+        public MoviesController(LexiconIMDBContext context, IGenreSelectListService selectListService)
         {
             _context = context;
+            _selectListService = selectListService;
         }
 
         // GET: Movies
@@ -72,22 +75,25 @@ namespace LexiconIMDB.Controllers
             var model = new IndexViewModel
             {
                 Movies = await movies.ToListAsync(),
-                Genres = await GetGenresAsync()
+                Genres = await _selectListService.GetGenresAsync()
             };
 
             return View(nameof(Index2), model);
         }
 
-        private async Task<IEnumerable<SelectListItem>> GetGenresAsync()
+        public async Task<IActionResult> Index3()
         {
-            return await _context.Movies.Select(m => m.Genre)
-                .Distinct()
-                .Select(g => new SelectListItem
-                {
-                    Text = g.ToString(),
-                    Value = g.ToString()
-                }).ToListAsync();
+            var movies = await _context.Movies.ToListAsync();
+
+            var model = new IndexViewModel2
+            {
+                Movies = movies
+            };
+
+            return View(model);
+
         }
+       
 
 
         // GET: Movies/Details/5
