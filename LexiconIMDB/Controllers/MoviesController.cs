@@ -75,7 +75,7 @@ namespace LexiconIMDB.Controllers
             var model = new IndexViewModel
             {
                 Movies = await movies.ToListAsync(),
-                Genres = await _selectListService.GetGenresAsync()
+                Genres = _selectListService.GetGenres(movies)
             };
 
             return View(nameof(Index2), model);

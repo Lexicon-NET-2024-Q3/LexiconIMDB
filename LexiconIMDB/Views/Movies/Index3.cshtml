@@ -15,7 +15,7 @@
     <div class="input-group mb-3">
         <input type="text" class="form-control" asp-for="Title" />
         <div class="input-group-append">
-            <select class="form-control" asp-for="Genre" asp-items="await service.GetGenresAsync()">
+            <select class="form-control" asp-for="Genre" asp-items="service.GetGenres(Model.Movies)">
                 <option selected="selected" value="">Please select</option>
             </select>
         </div>
